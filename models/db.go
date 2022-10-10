@@ -33,5 +33,6 @@ func init() {
 
 	if err := db.Ping(); err != nil {
 		log.Fatal(err)
+
 	}
 }

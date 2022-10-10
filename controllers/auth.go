@@ -23,10 +23,11 @@ type AuthController struct {
 
 //认证登录
 func (c *AuthController) Login() {
-	//检查session，如果已经登录，则直接返回用户
+	//检查session，
 	sessionKey := beego.AppConfig.DefaultString("auth::SessionKey", "user")
 	indexAction := beego.AppConfig.DefaultString("auth::IndexAction", "IndexController.Get")
 	sessionUser := c.GetSession(sessionKey)
+	//如果已经登录，则直接返回到默认页
 	if sessionUser != nil {
 
 		c.Redirect(beego.URLFor(indexAction), http.StatusFound)

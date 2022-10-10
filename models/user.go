@@ -3,7 +3,6 @@ package models
 import (
 	"database/sql"
 	"fmt"
-
 	"ming/utils"
 	"time"
 )
@@ -49,7 +48,8 @@ func GetUserByUsername(username string) *User {
 
 // ValidPassword 检查密码是否正确
 func (u *User) ValidPassword(password string) bool {
-	return u.Password == utils.EncodeMD5(password)
+	//u.Password 是数据库中保存的pwd值
+	return utils.VerifyPassword(password, u.Password)
 }
 
 // GetUserList 获取用户

@@ -10,6 +10,7 @@ import (
    @Desc:
 */
 
+//Like 处理查询参数的转义符
 func Like(q string) string {
 	q = strings.TrimSpace(q)
 	if q == "" {
