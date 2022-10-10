@@ -1,0 +1,94 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta12
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>登录 - X in One - 灵尧内部工具平台</title>
+    <!-- CSS files -->
+    <link href="/static/css/tabler.min.css" rel="stylesheet"/>
+    <link href="/static/css/tabler-flags.min.css" rel="stylesheet"/>
+    <link href="/static/css/tabler-payments.min.css" rel="stylesheet"/>
+    <link href="/static/css/tabler-vendors.min.css" rel="stylesheet"/>
+    <link href="/static/css/demo.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://rsms.me/inter/inter.css');
+        :root {
+            --tblr-font-sans-serif: Inter, -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+        }
+    </style>
+</head>
+<body  class=" d-flex flex-column bg-white">
+<script src="/static/js/demo-theme.min.js"></script>
+<div class="row g-0 flex-fill">
+    <div class="col-12 col-lg-6 col-xl-4  border-primary d-flex flex-column justify-content-center">
+        <div class="container container-tight my-5 px-lg-5">
+            <div class="text-center mb-4">
+                <a href="." class="navbar-brand navbar-brand-autodark"><img src="/static/ly-logo-white.png" height="36" alt=""></a>
+            </div>
+            <h2 class="h3 text-center mb-3">
+                登录
+            </h2>
+            <form action="{{urlfor `AuthController.Login`}}" method="post" autocomplete="off" novalidate>
+                <div class="mb-3">
+                    <label class="form-label">用户名</label>
+                    <input name="username" type="email" class="form-control" placeholder="邮箱或用户名" autocomplete="off" value="{{.username}}">
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">
+                        密码
+                        <span class="form-label-description">
+                  <a href="./forgot-password.html">忘记密码</a>
+                </span>
+                    </label>
+                    <div class="input-group input-group-flat">
+                        <input name="password" type="password" class="form-control"  placeholder="密码"  autocomplete="off">
+                        <span class="input-group-text">
+                  <a href="#" class="link-secondary" title="Show password" data-bs-toggle="tooltip"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="2" /><path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" /></svg>
+                  </a>
+                </span>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-check">
+                        <input type="checkbox" class="form-check-input" name="remember" {{.checked}}/>
+                        <span class="form-check-label">记住我</span>
+                    </label>
+                </div>
+                {{ if .errors.HasErrors }}
+                <div class="my-3 text-center">
+                        <span class="text-danger">{{range $index,$value := .errors.Errors}}
+                                {{index . 0}}
+                            {{end}}
+                        </span>
+                </div>
+                {{end}}
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary w-100">登录</button>
+                </div>
+            </form>
+            <div class="text-center text-muted mt-3">
+                还没有账号? <a href="{{urlfor `AuthController.Signup`}}">注册</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6 col-xl-8 d-none d-lg-block">
+        <div class="bg-cover h-100 min-vh-100" style="background-image: url(/static/login-pic4.svg)"></div>
+    </div>
+</div>
+<!-- Libs JS -->
+<!-- Tabler Core -->
+<script src="/static/js/tabler.min.js" defer></script>
+<script src="/static/js/demo.min.js" defer></script>
+</body>
+</html>
