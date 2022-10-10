@@ -26,4 +26,4 @@ create table if not exists user(
 )engine=innodb default charset utf8mb4;
 
 #插入数据
-insert into `user`(employee_id,username,nickname,avatar,password,gender,phone_num,address,email,department,post,role,status,created_at,updated_at) VALUES("ly0003","kangkang","康%康","",md5("kangkang"),1,"18384235350","成都市","kangkang@kang.com","测试运维部","运维开发",0,1,now(),now())
+insert into `user`(employee_id,username,nickname,avatar,password,gender,phone_num,address,email,department,post,role,status,created_at,updated_at) VALUES("ly0003","kangkang","康%康","",md5("kangkang"),1,"18483234331","上海市","kangkang@kang.com","开发部","开发",0,1,now(),now())
