@@ -1,5 +1,7 @@
 ming
 tmp/*
 .DS_Store
+.idea/*
 conf/mysql.conf
 .idea
+
