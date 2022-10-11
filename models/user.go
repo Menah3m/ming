@@ -1,8 +1,7 @@
 package models
 
 import (
-	"database/sql"
-	"fmt"
+	"github.com/beego/beego/v2/client/orm"
 	"ming/utils"
 	"time"
 )
@@ -12,38 +11,42 @@ import (
    @Desc:
 */
 
-const (
-	sqlQueryByName  = "select id,username,password from user where username=?"
-	sqlQueryAllUser = "select id,employee_id,username,nickname,email,department,post,role,status,gender,address from user"
-)
-
 // User用户
 type User struct {
-	ID         int       `field:"id"`
-	EmployeeID string    `field:"employee_id"`
-	Username   string    `field:"username"`
-	Avatar     string    `field:"avatar"`
-	Password   string    `field:"password"`
-	Nickname   string    `field:"nickname"`
-	Gender     int       `field:"gender"`
-	PhoneNum   string    `field:"phone_num"`
-	Address    string    `field:"address"`
-	Email      string    `field:"email"`
-	Department string    `field:"department"`
-	Post       string    `field:"post"`
-	Role       int       `field:"role"`
-	Status     int       `field:"status"`
-	CreatedAt  time.Time `field:"created_at"`
-	UpdatedAt  time.Time `field:"updated_at"`
+	ID         int    `orm:"column(id)"`
+	EmployeeID string `orm:"column(employee_id);size(32)"`
+	Username   string `orm:"size(64)"`
+	Avatar     string `orm:"size(1024)"`
+	Password   string `orm:"size(1024)"`
+	Nickname   string `orm:"size(64)"`
+	Gender     int
+	PhoneNum   string `orm:"column(phone_num);size(32)"`
+	Address    string `orm:"size(128)"`
+	Email      string `orm:"size(64)"`
+	Department string `orm:"size(64)"`
+	Post       string `orm:"size(64)"`
+	Role       int
+	Status     int
+	CreatedAt  time.Time `orm:"auto_now_add"`
+	UpdatedAt  time.Time `orm:"auto_now"`
+}
+
+// 注册model
+func init() {
+	orm.RegisterModel(new(User))
 }
 
 // GetUserByName 通过用户名获取用户
 func GetUserByUsername(username string) *User {
-	user := &User{}
-	if err := db.QueryRow(sqlQueryByName, username).Scan(&user.ID, &user.Username, &user.Password); err == nil {
+	user := &User{
+		Username: username,
+	}
+	ormer := orm.NewOrm()
+	if err := ormer.Read(user, "Username"); err == nil {
 		return user
 	}
 	return nil
+
 }
 
 // ValidPassword 检查密码是否正确
@@ -52,36 +55,23 @@ func (u *User) ValidPassword(password string) bool {
 	return utils.VerifyPassword(password, u.Password)
 }
 
-// GetUserList 获取用户
+// GetUserList 查询特定用户
 func GetUserList(q string) []*User {
-	//对查询参数做相应的处理：转义、去除多余空格等
-	q = utils.Like(q)
-	users := make([]*User, 0, 10)
-	sqlQuery := sqlQueryAllUser
-	var (
-		rows *sql.Rows
-		err  error
-	)
-	//定义空接口切片，用来存放不确定个数的查询参数
-	queryParam := []interface{}{}
+	var users []*User
+	queryset := orm.NewOrm().QueryTable(&User{})
 	if q != "" {
-		sqlQuery += " WHERE  employee_id like ? ESCAPE '/' OR username like ? ESCAPE '/' OR nickname like ? ESCAPE '/' OR email like ? ESCAPE '/'  OR department like ? ESCAPE '/'  OR post like ? ESCAPE '/'  OR  role like ?  ESCAPE '/' OR status like ? ESCAPE '/'  OR gender like ? ESCAPE '/'  OR address like ? ESCAPE '/' "
-		queryParam = append(queryParam, q, q, q, q, q, q, q, q, q, q)
+		cond := orm.NewCondition()
+		cond = cond.Or("username__icontains", q)
+		cond = cond.Or("nickname__icontains", q)
+		cond = cond.Or("department__icontains", q)
+		cond = cond.Or("gender__icontains", q)
+		cond = cond.Or("post__icontains", q)
+		cond = cond.Or("role__icontains", q)
+		cond = cond.Or("status__icontains", q)
+		queryset = queryset.SetCond(cond)
 	}
-	//查询
-	rows, err = db.Query(sqlQuery, queryParam...)
-	if err != nil {
-		fmt.Println(err)
-	}
-	for rows.Next() {
-		user := &User{}
-		err := rows.Scan(&user.ID, &user.EmployeeID, &user.Username, &user.Nickname, &user.Email, &user.Department, &user.Post, &user.Role, &user.Status, &user.Gender, &user.Address)
-		if err != nil {
-			fmt.Println("scan err:", err)
-			return nil
-		}
-		users = append(users, user)
-	}
+
+	queryset.All(&users)
 	return users
 }
 
